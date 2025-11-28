@@ -36,4 +36,17 @@ public class App {
       return "Login failed";
     }
   }
+
+  public static String checkPasswordStrength(String password) {
+    if (password == null || password.length() < 6) {
+      return "WEAK";
+    } else if (password.length() >= 8 &&
+            password.matches(".*[0-9].*") &&
+            password.matches(".*[A-Za-z].*")) {
+      return "STRONG";
+    } else {
+      return "MEDIUM";
+    }
+  }
+
 }
