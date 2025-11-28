@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        maven 'Maven3'  // Убедитесь что в Jenkins есть инструмент с именем 'Maven3'
+        maven 'Maven3'
     }
 
     options {
@@ -15,6 +15,7 @@ pipeline {
         MAVEN_OPTS = '-Dmaven.test.failure.ignore=false'
         REPO_URL = 'https://github.com/AleksandraRyma/lab6_attempt2.git'
         DEFAULT_BRANCH = 'master'
+        PROJECT_DIR = 'java-maven-ci-demo'  // Добавлена переменная для папки проекта
     }
 
     triggers {
@@ -27,40 +28,51 @@ pipeline {
                 git branch: "${env.BRANCH_NAME ?: env.DEFAULT_BRANCH}",
                     url: "${env.REPO_URL}"
             }
-        }  
+        }
+
         stage('Build') {
             steps {
-                bat 'mvn -v'
-                bat 'mvn -B -U clean compile'
+                dir(env.PROJECT_DIR) {  // Переход в папку проекта
+                    bat 'mvn -v'
+                    bat 'mvn -B -U clean compile'
+                }
             }
         }
 
         stage('Test') {
             steps {
-                bat 'mvn -B test'
+                dir(env.PROJECT_DIR) {  // Переход в папку проекта
+                    bat 'mvn -B test'
+                }
             }
             post {
                 always {
-                    junit '**/target/surefire-reports/*.xml'
-                    publishHTML([
-                        allowMissing: false,
-                        alwaysLinkToLastBuild: true,
-                        keepAll: true,
-                        reportDir: 'target/site/jacoco',
-                        reportFiles: 'index.html',
-                        reportName: 'JaCoCo Coverage'
-                    ])
+                    dir(env.PROJECT_DIR) {  // Переход в папку проекта для отчетов
+                        junit '**/target/surefire-reports/*.xml'
+                        publishHTML([
+                            allowMissing: false,
+                            alwaysLinkToLastBuild: true,
+                            keepAll: true,
+                            reportDir: 'target/site/jacoco',
+                            reportFiles: 'index.html',
+                            reportName: 'JaCoCo Coverage'
+                        ])
+                    }
                 }
             }
         }
 
         stage('Package') {
             steps {
-                bat 'mvn -B package'
+                dir(env.PROJECT_DIR) {  // Переход в папку проекта
+                    bat 'mvn -B package'
+                }
             }
             post {
                 success {
-                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                    dir(env.PROJECT_DIR) {  // Переход в папку проекта для артефактов
+                        archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                    }
                 }
             }
         }
@@ -82,10 +94,12 @@ pipeline {
                 branch 'master'
             }
             steps {
-                bat 'java -jar target/java-maven-ci-demo-1.0.0.jar > app.log 2>&1'
+                dir(env.PROJECT_DIR) {  // Переход в папку проекта
+                    bat 'java -jar target/java-maven-ci-demo-1.0.0.jar > app.log 2>&1'
+                }
             }
         }
-    }  // ✅ ЗАКРЫВАЮЩАЯ СКОБКА stages
+    }
 
     post {
         success {
