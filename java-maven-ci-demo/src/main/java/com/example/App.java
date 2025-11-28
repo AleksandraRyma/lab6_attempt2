@@ -24,4 +24,8 @@ public class App {
     // Здесь могла бы быть любая логика — валидация, обработка и т.п.
     return "Hello, " + name + "!";
   }
+
+  public static int add(int a, int b) {
+    return a + b;
+  }
 }

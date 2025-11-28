@@ -18,4 +18,12 @@ class AppTest {
     void testGreet() {
         assertEquals("Hello, World!", App.greet("World"));
     }
+
+    @Test
+    void testAdd() {
+        assertEquals(5, App.add(2, 3));
+        assertEquals(0, App.add(0, 0));
+        assertEquals(-1, App.add(2, -3));
+        assertEquals(10, App.add(5, 5));
+    }
 }
