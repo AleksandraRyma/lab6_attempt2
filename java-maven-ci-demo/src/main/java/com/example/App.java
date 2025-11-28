@@ -28,4 +28,12 @@ public class App {
   public static int add(int a, int b) {
     return a + b;
   }
+
+  public static String login(String username, String password) {
+    if ("admin".equals(username) && "12345".equals(password)) {
+      return "Login successful for user: " + username;
+    } else {
+      return "Login failed";
+    }
+  }
 }

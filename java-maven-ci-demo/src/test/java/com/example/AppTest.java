@@ -26,4 +26,12 @@ class AppTest {
         assertEquals(-1, App.add(2, -3));
         assertEquals(10, App.add(5, 5));
     }
+
+    @Test
+    void testCheckPasswordStrength() {
+        assertEquals("Password too weak: must be at least 8 characters",
+                App.checkPasswordStrength("123"));
+        assertEquals("Password strength: Strong",
+                App.checkPasswordStrength("Admin123"));
+    }
 }
