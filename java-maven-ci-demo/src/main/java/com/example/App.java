@@ -48,5 +48,7 @@ public class App {
       return "MEDIUM";
     }
   }
-
+  public static boolean isEven(int number) {
+    return number % 2 == 0;
+  }
 }
