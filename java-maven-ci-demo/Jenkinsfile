@@ -49,14 +49,7 @@ pipeline {
                 always {
                     dir(env.PROJECT_DIR) {  // Переход в папку проекта для отчетов
                         junit '**/target/surefire-reports/*.xml'
-                        publishHTML([
-                            allowMissing: false,
-                            alwaysLinkToLastBuild: true,
-                            keepAll: true,
-                            reportDir: 'target/site/jacoco',
-                            reportFiles: 'index.html',
-                            reportName: 'JaCoCo Coverage'
-                        ])
+
                     }
                 }
             }
